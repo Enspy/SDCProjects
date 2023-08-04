@@ -1,0 +1,169 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.TreeMap;
+
+
+public class Main {
+ public static void main(String args[]){
+
+   // Initializing 2D Array to Store States and Capitals
+   // Row 0 is states, Row 1 is Capital Cities, Each column is a pair
+   String[][] capitalCities = {
+      {"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"},
+      {"Montgomery", "Juneau", "Phoenix", "Little Rock", "Sacramento", "Denver", "Hartford", "Dover", "Tallahassee", "Atlanta", "Honolulu", "Boise", "Springfield", "Indianapolis", "Des Moines", "Topeka", "Frankfort", "Baton Rouge", "Augusta", "Annapolis", "Boston", "Lansing", "Saint Paul", "Jackson", "Jefferson City", "Helena", "Lincoln", "Carson City", "Concord", "Trenton", "Santa Fe", "Albany", "Raleigh", "Bismarck", "Columbus", "Oklahoma City", "Salem", "Harrisburg", "Providence", "Columbia", "Pierre", "Nashville", "Austin", "Salt Lake City", "Montpelier", "Richmond", "Olympia", "Charleston", "Madison", "Cheyenne"}
+   };
+
+   //Retrieving user input through the Scanner class and storing input in a string
+
+   System.out.println("===========Welcome to the US Game of Capital Cities===========");
+   System.out.println("Please enter a state capital: ");
+   Scanner scan = new Scanner(System.in);
+   String userAnswer = scan.nextLine();
+
+   boolean match = false;
+
+   String[] cities = capitalCities[1];
+
+   for (String city:cities) {
+      if (city.equalsIgnoreCase(userAnswer)) {
+         match = true;
+         break; 
+         }
+      }
+   // If match is found, send a message to the user that their answer was correct
+
+      if (match) {
+         System.out.println("Congratulations, that is correct. " + userAnswer + " is a US State Capital.");
+      } else {
+         System.out.println("Sorry " + userAnswer + " is not a US State Capital.");
+      }
+   
+   
+   // Printing out all 50 elements of each array, printing the state and capital
+   System.out.println("===========I will now print all States with their associated capital!===========");
+   for (int i=0; i < 50; i++){
+      System.out.println("The capital of " + capitalCities[0][i] + " is " + capitalCities[1][i] + ".");
+   }
+
+   // Sorting the 2D Array by Capital using Bubble Sort
+   System.out.println("Now sorting the array by Captial, in alphabetical order, instead of State");
+   System.out.println("NOTE: This has no impact on you");
+
+   // Interating through two nested loops to compare a given value to the next occuring value and swapping if neccesary
+
+   for (int j = 0; j < capitalCities[0].length; j++){
+      for (int i = j; i < capitalCities[0].length; i++){
+         // Initializing variables for city and state to be cleared and reused each loop
+
+         String tempCity;
+         String tempState;
+
+         // If next (i) capital is less than current (j) capital
+
+         if (capitalCities[1][i].compareTo(capitalCities[1][j]) < 0) {
+            // Then swap the values, placing the current capital into a temp variable
+            // Reassign the next capital to the current
+            // Reassign the temp value to next capital
+
+            tempCity = capitalCities[1][j];
+            capitalCities[1][j] = capitalCities[1][i];
+            capitalCities[1][i] = tempCity;
+
+            // Perform the same operations on states, to maintain state/capital columns matching within arrray
+            tempState = capitalCities[0][j];
+            capitalCities[0][j] = capitalCities[0][i];
+            capitalCities[0][i] = tempState;
+         }
+      }
+   }
+   //Explaining instructions to users
+
+   System.out.println("===========Now I'm going to ask you to name as many state capitals as you can.===========");
+   System.out.println("Please enter as many state capitals as you can. Be sure to hit enter between capitals.");
+   System.out.println("Enter the command 'quit' when you are done.");
+
+   // Intialize Scanner
+
+   boolean endLoop = false;
+   Scanner loopScan = new Scanner(System.in);
+   ArrayList<String> userList = new ArrayList<>();
+
+   while(!endLoop) {
+      String loopInput = loopScan.nextLine();
+      if (loopInput.equalsIgnoreCase("quit")) {
+         System.out.println("Moving on...");
+         endLoop = true;
+      }
+      else {
+         userList.add(loopInput);
+      }
+   }
+
+   // Presenting the results to the user
+
+   System.out.println("===========You submitted " + userList.size() + " answers. Here's how many you got right...===========");
+   // Initializing counter for correct answers
+
+   int numCorrect = 0;
+   // Loop through the array of capitals and check if user's input results in match
+   // If so, increment counter by 1
+
+   for (String attempt: userList){
+      for (String city: cities) {
+         if (attempt.equalsIgnoreCase(city))
+            numCorrect +=1;
+      }
+   }
+   // Now reporting the number of correct answers to the user
+
+   System.out.println("Out of " + userList.size() + " attempts, you got " + numCorrect + " correct.");
+   System.out.println("===========Placing the arrays into a Hashmap...===========");
+
+   // Initializing a new HashMap, containing Key (state) and Value (capital) strings
+
+   HashMap<String, String> capitalMap = new HashMap<>(capitalCities[0].length);
+
+   // Iterate through all elements of the 2D array, placing row 0 (state) and Row 1 (capital) values into HashMap
+
+   for (int i = 0; i < capitalCities[0].length; i++) {
+      capitalMap.put(capitalCities[0][i], capitalCities[1][i]);
+   }
+
+   //Printing out the hashmap 
+
+   for (String key: capitalMap.keySet()) {
+      System.out.println("The capital of " + key + " is " + capitalMap.get(key) + ".");
+   }
+
+   // Now using the TreeMap class to sort the map while storing it in a Binary Tree
+
+   TreeMap<String, String> capitalsSorted = new TreeMap<>(capitalMap);
+   // Ask the user for a state and then give them the state's capital
+   System.out.println("===========Enter a state, and I will tell you the capital of that state.===========");
+   System.out.println("Enter the command 'quit' when you're done");
+   endLoop = false;
+
+   while(!endLoop) {
+      // Take user input to see if the user has quit
+
+      System.out.println("Please enter a state: ");
+      String loopInput = loopScan.nextLine();
+      if (loopInput.equalsIgnoreCase("quit")) {
+         System.out.println("Ending program...");
+         endLoop = true;
+         continue;
+   }
+
+   // Check if user's input exists as a key in the TreeMap and provide the associated value
+
+   if (capitalsSorted.containsKey(loopInput)) {
+      System.out.println("The capital of " + loopInput + " is " + capitalsSorted.get(loopInput) + ".");
+
+   } else {
+      System.out.println("This is not a valid state. Please try again, or type 'quit'.");
+   }
+ }
+}
+}
+  
